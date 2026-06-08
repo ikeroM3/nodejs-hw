@@ -5,7 +5,7 @@ import {
   createNote,
   deleteNote,
   updateNote,
-} from '../controllers/noteController.js';
+} from '../controllers/notesController.js';
 import { celebrate } from 'celebrate';
 import {
   getAllNotesSchema,
