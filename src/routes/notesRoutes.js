@@ -12,16 +12,14 @@ import {
   noteIdSchema,
   createNoteSchema,
   updateNoteSchema,
-} from '../validations/notesValidation.js'; // ← один імпорт, правильний регістр
+} from '../validations/notesValidation.js';
 
 const router = Router();
 
 router.get('/notes', celebrate(getAllNotesSchema), getAllNotes);
-
-router.get('/notes', celebrate(getAllNotesSchema), getAllNotes);
+router.post('/notes', celebrate(createNoteSchema), createNote);
 router.get('/notes/:noteId', celebrate(noteIdSchema), getNoteById);
-router.post('/notes', celebrate(createNoteSchema), createNote); // ← була відсутня валідація
-router.delete('/notes/:noteId', celebrate(noteIdSchema), deleteNote); // ← була відсутня валідація
-router.patch('/notes/:noteId', celebrate(updateNoteSchema), updateNote); // ← неправильний синтаксис
+router.delete('/notes/:noteId', celebrate(noteIdSchema), deleteNote);
+router.patch('/notes/:noteId', celebrate(updateNoteSchema), updateNote);
 
 export default router;

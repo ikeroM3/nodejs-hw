@@ -13,12 +13,14 @@ export const getAllNotesSchema = {
 const valid = mongoose.isValidObjectId;
 export const noteIdSchema = {
   [Segments.PARAMS]: Joi.object({
-    noteId: Joi.string().custom((value, messege) => {
-      if (!valid(value)) {
-        return messege.error('any.invalid');
-      }
-      return value;
-    }),
+    noteId: Joi.string()
+      .custom((value, helpers) => {
+        if (!valid(value)) {
+          return helpers.error('any.invalid');
+        }
+        return value;
+      })
+      .required(),
   }),
 };
 export const updateNoteSchema = {
