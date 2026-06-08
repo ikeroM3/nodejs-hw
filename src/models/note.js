@@ -27,6 +27,7 @@ const noteSchema = new Schema(
         'Todo',
       ],
       default: 'Todo',
+      index: true,
     },
   },
   {
