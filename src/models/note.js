@@ -1,8 +1,13 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 import { TAGS } from '../constants/tags.js';
 
 const noteSchema = new Schema(
   {
+    userId: {
+      type: Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
     title: {
       type: String,
       required: true,
@@ -24,6 +29,7 @@ const noteSchema = new Schema(
   },
 );
 
-noteSchema.index({ title: 'text', content: 'text' });
+noteSchema.index({ tag: 1 });
+noteSchema.index({ userId: 1 });
 
-export default model('Note', noteSchema);
+export const Note = model('Note', noteSchema);
