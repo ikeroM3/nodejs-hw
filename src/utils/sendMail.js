@@ -1,14 +1,16 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASSWORD,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-export const sendEmail = async (options) => {
-  return await transporter.sendMail(options);
+export const sendEmail = async ({ to, subject, html }) => {
+  const { error } = await resend.emails.send({
+    from: process.env.SMTP_FROM,
+    to,
+    subject,
+    html,
+  });
+
+  if (error) {
+    throw new Error(error.message ?? 'Failed to send email via Resend');
+  }
 };
