@@ -4,7 +4,7 @@ import { User } from '../models/user.js';
 import { Session } from '../models/session.js';
 import { createSession, setSessionCookies } from '../services/auth.js';
 import jwt from 'jsonwebtoken';
-import { Resend } from 'resend';
+
 import { sendEmail } from '../utils/sendMail.js';
 import path from 'node:path';
 import handlebars from 'handlebars';
@@ -120,7 +120,7 @@ export const logoutUser = async (req, res) => {
 
   res.status(204).send();
 };
-const resend = new Resend(process.env.Resend1);
+
 export const requestResetEmail = async (req, res) => {
   const { email } = req.body;
 
@@ -137,7 +137,7 @@ export const requestResetEmail = async (req, res) => {
     process.env.JWT_SECRET,
     { expiresIn: '15m' },
   );
-  const templatePath = path.resolve('src/templates/reset-passord-email.html');
+  const templatePath = path.resolve('src/templates/reset-password-email.html');
   const templateSource = await fs.readFile(templatePath, 'utf-8');
   const template = handlebars.compile(templateSource);
   const html = template({
@@ -146,10 +146,9 @@ export const requestResetEmail = async (req, res) => {
   });
 
   try {
-    await resend.emails.send({
-      from: 'onboarding@resend.dev',
+    await sendEmail({
       to: email,
-      subject: 'Hello World',
+      subject: 'Скидання паролю',
       html,
     });
   } catch (err) {
