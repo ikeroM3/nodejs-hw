@@ -14,25 +14,21 @@ export const createSession = async (userId) => {
     refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
   });
 };
+
 export const setSessionCookies = (res, session) => {
-  res.cookie('accessToken', session.accessToken, {
+  const baseCookie = {
     httpOnly: true,
     secure: true,
     sameSite: 'none',
+    maxAge: ONE_DAY,
+  };
+
+  res.cookie('accessToken', session.accessToken, {
+    ...baseCookie,
     maxAge: FIFTEEN_MINUTES,
   });
 
-  res.cookie('refreshToken', session.refreshToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    maxAge: ONE_DAY,
-  });
+  res.cookie('refreshToken', session.refreshToken, baseCookie);
 
-  res.cookie('sessionId', session._id.toString(), {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    maxAge: ONE_DAY,
-  });
+  res.cookie('sessionId', session._id.toString(), baseCookie);
 };
