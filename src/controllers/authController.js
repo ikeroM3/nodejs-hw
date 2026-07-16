@@ -31,25 +31,29 @@ export const registerUser = async (req, res) => {
   res.status(201).json(user);
 };
 
-export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+export const loginUser = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
-  if (!user) {
-    throw createHttpError(401, 'Invalid credentials');
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw createHttpError(401, 'Invalid credentials');
+    }
+
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+      throw createHttpError(401, 'Invalid credentials');
+    }
+
+    await Session.deleteOne({ userId: user._id });
+
+    const session = await createSession(user._id);
+    setSessionCookies(res, session);
+
+    res.status(200).json(user);
+  } catch (err) {
+    next(err);
   }
-
-  const isValidPassword = await bcrypt.compare(password, user.password);
-  if (!isValidPassword) {
-    throw createHttpError(401, 'Invalid credentials');
-  }
-
-  await Session.deleteOne({ userId: user._id });
-
-  const session = await createSession(user._id);
-  setSessionCookies(res, session);
-
-  res.status(200).json(user);
 };
 
 export const refreshUserSession = async (req, res) => {
