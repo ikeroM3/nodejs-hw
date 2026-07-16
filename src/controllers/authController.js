@@ -65,7 +65,9 @@ export const refreshUserSession = async (req, res) => {
   });
 
   if (!session) {
-    throw createHttpError(401, 'Session not found');
+    return res.status(401).json({
+      message: 'Session not found',
+    });
   }
 
   if (new Date() > session.refreshTokenValidUntil) {
