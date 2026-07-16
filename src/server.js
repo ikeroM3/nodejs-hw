@@ -22,7 +22,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: ['https://09-auth-qazs.vercel.app', 'http://localhost:3000'],
+    origin: ['https://09-auth-gamma-cyan.vercel.app', 'http://localhost:3001'],
     credentials: true,
   }),
 );
