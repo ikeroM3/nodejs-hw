@@ -57,12 +57,20 @@ export const loginUser = async (req, res, next) => {
 };
 
 export const refreshUserSession = async (req, res) => {
+  console.log('========== REFRESH ==========');
+  console.log('Cookies:', req.cookies);
+
   const { sessionId, refreshToken } = req.cookies;
+
+  console.log('sessionId:', sessionId);
+  console.log('refreshToken:', refreshToken);
 
   const session = await Session.findOne({
     _id: sessionId,
     refreshToken,
   });
+
+  console.log('Session found:', session);
 
   if (!session) {
     return res.status(401).json({
@@ -78,23 +86,30 @@ export const refreshUserSession = async (req, res) => {
       secure: true,
       sameSite: 'none',
     });
+
     res.clearCookie('accessToken', {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
     });
+
     res.clearCookie('refreshToken', {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
     });
 
-    throw createHttpError(401, 'Session token expired');
+    return res.status(401).json({
+      message: 'Session token expired',
+    });
   }
 
   await Session.deleteOne({ _id: session._id });
 
   const newSession = await createSession(session.userId);
+
+  console.log('New session:', newSession);
+
   setSessionCookies(res, newSession);
 
   res.status(200).json({
