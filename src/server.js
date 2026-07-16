@@ -28,7 +28,7 @@ app.use(
 );
 app.use('/api', authRouter);
 app.use('/api', userRouter);
-app.use('/api', notesRouter);
+app.use(notesRouter);
 
 app.use(notFoundHandler);
 
