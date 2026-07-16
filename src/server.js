@@ -19,7 +19,14 @@ await connectMongoDB();
 app.use(logger);
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+
+app.use(
+  cors({
+    origin: ['https://09-auth-qazs.vercel.app', 'http://localhost:3000'],
+    credentials: true,
+  }),
+);
+
 app.use(authRouter);
 app.use(userRouter);
 app.use(notesRouter);
