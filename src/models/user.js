@@ -30,7 +30,6 @@ userSchema.pre('save', function (next) {
   if (!this.username) {
     this.username = this.email;
   }
-  next();
 });
 
 userSchema.methods.toJSON = function () {
